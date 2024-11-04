@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "torneos",
+  "info": {
+    "singularName": "torneo",
+    "pluralName": "torneos",
+    "displayName": "Torneo"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name_Torneo": {
+      "type": "string",
+      "required": true
+    },
+    "Description_Torneo": {
+      "type": "blocks",
+      "required": true
+    },
+    "Cover_Torneo": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "Date_Torneo": {
+      "type": "date",
+      "required": true
+    },
+    "games": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::game.game",
+      "inversedBy": "torneos"
+    }
+  }
+}
