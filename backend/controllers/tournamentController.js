@@ -1,7 +1,7 @@
-const pool = require('../config/db'); // Conexión a la base de datos
+import pool from '../config/db.js'; // Conexión a la base de datos
 
 // Obtener todos los torneos (con filtros opcionales)
-const getTournaments = async (req, res) => {
+export const getTournaments = async (req, res) => {
   try {
     const { name, game_name, start_date, end_date } = req.query;
 
@@ -32,7 +32,7 @@ const getTournaments = async (req, res) => {
 };
 
 // Obtener el detalle de un torneo específico por ID
-const getTournamentById = async (req, res) => {
+export const getTournamentById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -49,5 +49,3 @@ const getTournamentById = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener el torneo' });
   }
 };
-
-module.exports = { getTournaments, getTournamentById };

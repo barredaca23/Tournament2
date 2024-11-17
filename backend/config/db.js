@@ -1,12 +1,14 @@
-const { Pool } = require('pg');
-require('dotenv').config();  // Para acceder a las variables de entorno
+import pkg from 'pg';
+const { Pool } = pkg;
+import dotenv from 'dotenv';
 
-// Crear una instancia de Pool para conectar con PostgreSQL
+dotenv.config();
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,  // Asumiendo que tienes la variable de entorno DATABASE_URL en tu .env
+  connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false  // Requiere esto si usas conexiones SSL, como en Neon
-  }
+    rejectUnauthorized: false,
+  },
 });
 
-module.exports = pool;
+export default pool;
