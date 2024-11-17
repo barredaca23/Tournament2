@@ -1,32 +1,27 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { Pool } = require('pg');
+const tournamentRoutes = require('./routes/tournamentRoutes'); // Rutas de torneos
+const adminTournamentRoutes = require('./routes/adminTournamentRoutes'); // Rutas de administración de torneos
 
-// Cargar variables de entorno
 dotenv.config();
 
-// Crear una instancia de Express
 const app = express();
 
-// Middleware
-app.use(express.json());  // Para manejar el cuerpo de las solicitudes como JSON
-app.use(cors());  // Para permitir CORS
+app.use(express.json());
+app.use(cors());
+app.use('/uploads', express.static('uploads')); // Servir archivos estáticos (imágenes)
 
-// Conectar con la base de datos en Neon
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false  // Esto es necesario cuando usas SSL (como en Neon)
-  }
-});
+// Rutas
+app.use('/api/tournaments', tournamentRoutes); // Rutas de torneos
+app.use('/api/admin/tournaments', adminTournamentRoutes); // Rutas de administración de torneos
 
-// Ruta de prueba
+// Ruta base
 app.get('/', (req, res) => {
-  res.send('¡Servidor corriendo!');
+  res.send('¡Servidor funcionando correctamente!');
 });
 
-// Iniciar servidor
+// Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
