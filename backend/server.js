@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import tournamentRoutes from './routes/tournamentRoutes.js';
+import gameRoutes from './routes/gameRoutes.js'
+import usersRoutes from './routes/users.routes.js'
 
 dotenv.config();
 
