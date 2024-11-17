@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import tournamentRoutes from './routes/tournamentRoutes.js';
+import gameRoutes from './routes/gameRoutes.js';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 // Rutas
+app.use('/api/games', gameRoutes);
 app.use('/api/tournaments', tournamentRoutes);
 
 app.get('/', (req, res) => {
