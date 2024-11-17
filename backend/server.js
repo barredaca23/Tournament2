@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import tournamentRoutes from './routes/tournamentRoutes.js';
+import usersRoutes from './routes/users.routes.js'
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use('/uploads', express.static('uploads'));
 
 // Rutas
 app.use('/api/tournaments', tournamentRoutes);
+app.use('/api/users', usersRoutes);
 
 app.get('/', (req, res) => {
   res.send('¡Servidor funcionando correctamente!');
