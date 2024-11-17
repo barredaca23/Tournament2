@@ -66,4 +66,5 @@ const deleteTournament = async (req, res) => {
   }
 };
 
+
 module.exports = { createTournament, updateTournament, deleteTournament };
