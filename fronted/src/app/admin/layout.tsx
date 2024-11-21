@@ -1,18 +1,38 @@
-import React from 'react';
+import React from 'react'
+import Link from 'next/link'
+import { TrophyIcon, GamepadIcon } from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
-      <header style={{ padding: '1rem', backgroundColor: '#333', color: '#fff' }}>
-        <h1>Panel de Administración</h1>
-        <nav>
-          <a href="/admin/tournaments" style={{ margin: '0 1rem', color: '#fff' }}>Torneos</a>
-          <a href="/admin/games" style={{ margin: '0 1rem', color: '#fff' }}>Juegos</a>
-        </nav>
+    <div className="min-h-screen bg-gray-900 text-gray-100 font-sans">
+      <header className="bg-gray-800 border-b border-purple-600">
+        <div className="container mx-auto px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center">
+            <Link href="/admin" className="text-2xl sm:text-3xl font-bold text-purple-400 mb-4 sm:mb-0">
+              Panel de Administración 
+            </Link>
+            <nav className="flex space-x-4">
+              <Link 
+                href="/admin/tournaments" 
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+              >
+                <TrophyIcon className="w-5 h-5 mr-1" />
+                Torneos
+              </Link>
+              <Link 
+                href="/admin/games" 
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
+              >
+                <GamepadIcon className="w-5 h-5 mr-1" />
+                Juegos
+              </Link>
+            </nav>
+          </div>
+        </div>
       </header>
-      <main style={{ padding: '2rem' }}>
+      <main className="container mx-auto px-4 py-8">
         {children}
       </main>
     </div>
-  );
+  )
 }

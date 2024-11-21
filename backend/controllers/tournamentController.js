@@ -115,6 +115,31 @@ export const deleteTournament = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar el torneo' });
   }
 };
+export const getTournamentCount = async (req, res) => {
+  try {
+    console.log('Obteniendo el conteo de torneos');
+    
+    // Asegúrate de que esta consulta esté apuntando a la tabla correcta
+    const result = await pool.query('SELECT COUNT(*) FROM tournaments');  // Esta es la consulta correcta
+    
+    // Parseamos correctamente el conteo como un número
+    const count = parseInt(result.rows[0].count, 10);  // Esto asegura que el conteo sea un número
+    
+    if (isNaN(count)) {
+      throw new Error('El conteo de torneos no es un número válido');
+    }
+    
+    res.status(200).json({ count });  // Devolvemos el conteo
+  } catch (error) {
+    console.error('Error al obtener el conteo de torneos:', error);
+    res.status(500).json({ error: 'Error al obtener el conteo de torneos' });
+  }
+};
+
+
+
+
+
 
 
 
