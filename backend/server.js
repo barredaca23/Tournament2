@@ -1,9 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+
 import tournamentRoutes from './routes/tournamentRoutes.js';
-import gameRoutes from './routes/gameRoutes.js'
-import usersRoutes from './routes/users.routes.js'
+import gameRoutes from './routes/gameRoutes.js';
+import usersRoutes from './routes/users.routes.js';
+import uploadRoutes from './routes/uploadRoutes.js'; // Importa las rutas de subida de imágenes
 
 dotenv.config();
 
@@ -17,6 +19,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/games', gameRoutes);
 app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api', uploadRoutes); // Registra las rutas de subida de imágenes
 
 
 app.get('/', (req, res) => {
