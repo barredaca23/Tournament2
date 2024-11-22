@@ -17,7 +17,7 @@ export const register = async (req, res) => {
 
         // Insertar nuevo usuario
         const newUser = await pool.query(
-            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
+            'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *',
             [username, email, hashedPassword]
         );
 
@@ -30,26 +30,52 @@ export const register = async (req, res) => {
 // Inicio de sesión
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
     try {
+        console.log("Datos recibidos:", { email, password });
+
         // Buscar usuario por email
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        console.log("Resultado de la búsqueda:", user.rows);
+
         if (user.rows.length === 0) {
+            console.log("Usuario no encontrado.");
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
         // Comparar contraseñas
-        const isMatch = await bcrypt.compare(password, user.rows[0].password);
+        const isMatch = await bcrypt.compare(password, user.rows[0].password_hash);
+        console.log("Resultado de comparación de contraseña:", isMatch);
+
         if (!isMatch) {
+            console.log("Contraseña incorrecta.");
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
 
         // Generar token
-        const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, user: user.rows[0] });
+        const token = jwt.sign(
+            { id: user.rows[0].id, role: user.rows[0].role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        console.log("Token generado:", token);
+
+        res.json({
+            token,
+            user: {
+                id: user.rows[0].id,
+                username: user.rows[0].username,
+                email: user.rows[0].email,
+            },
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error en el login:", error.message);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+
+
 
 // Obtener todos los usuarios
 export const getUsers = async (req, res) => {
@@ -86,3 +112,17 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Obtener el perfil del usuario
+export const getUserProfile = async (req, res) => {
+    try {
+      const userId = req.user.id; // Asegúrate de tener autenticación configurada para obtener el ID del usuario
+      const { rows } = await pool.query('SELECT id, name, email FROM users WHERE id = $1', [userId]);
+      
+      if (rows.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
+  
+      res.json(rows[0]);
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener el perfil', error });
+    }
+  };

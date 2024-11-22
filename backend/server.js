@@ -18,6 +18,7 @@ app.use('/api/games', gameRoutes);
 app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/users', usersRoutes);
 
+
 app.get('/', (req, res) => {
   res.send('¡Servidor funcionando correctamente!');
 });
