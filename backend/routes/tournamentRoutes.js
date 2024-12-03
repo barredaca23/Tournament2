@@ -6,6 +6,7 @@ import {
   updateTournament,
   deleteTournament,
   getTournamentCount,
+  registerUserToTournament
 } from '../controllers/tournamentController.js';
 import { isAdmin } from './authMiddleware.js'; // Importa middlewares necesarios
 
@@ -22,12 +23,15 @@ router.get('/count',  getTournamentCount);
 router.post('/', isAdmin, createTournament);
 
 // Actualizar un torneo existente (Accesible solo para administradores)
-router.put('/:id', isAdmin, updateTournament);
+router.put('/:id',  updateTournament);
 
 // Eliminar un torneo por ID (Accesible solo para administradores)
-router.delete('/:id', isAdmin, deleteTournament);
+router.delete('/:id',  deleteTournament);
 
 // Obtener un torneo específico por ID (Accesible para cualquier usuario autenticado)
 router.get('/:id',  getTournamentById);
+
+router.post('/:id/register', registerUserToTournament);
+
 
 export default router;

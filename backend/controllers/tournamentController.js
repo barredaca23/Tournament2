@@ -137,6 +137,39 @@ export const getTournamentCount = async (req, res) => {
 };
 
 
+export const registerUserToTournament = async (req, res) => {
+  const { userId, role } = req.body;
+  const { id: tournamentId } = req.params;
+
+  try {
+    // Validar que el usuario tiene el rol correcto
+    if (role !== 'user') {
+      return res.status(403).json({ message: 'Solo los usuarios con rol "user" pueden registrarse en torneos.' });
+    }
+
+    // Comprobar si el usuario ya está registrado
+    const existingRegistration = await pool.query(
+      'SELECT * FROM tournament_participants WHERE user_id = $1 AND tournament_id = $2',
+      [userId, tournamentId]
+    );
+
+    if (existingRegistration.rows.length > 0) {
+      return res.status(400).json({ message: 'El usuario ya está registrado en este torneo.' });
+    }
+
+    // Registrar al usuario en el torneo
+    await pool.query(
+      'INSERT INTO tournament_participants (user_id, tournament_id, registration_date) VALUES ($1, $2, NOW())',
+      [userId, tournamentId]
+    );
+
+    res.status(201).json({ message: 'Registro exitoso en el torneo.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
 
 
 
