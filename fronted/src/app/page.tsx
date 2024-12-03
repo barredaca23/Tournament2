@@ -2,12 +2,15 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Use next/router for navigation
+import TournamentCard from './components/TournamentCard';
+import TournamentList from './components/TournamentList';
+import GameList from './components/GameList';
 
 const HomePage = () => {
   const router = useRouter(); // Use Next.js router
 
   const navigateToLogin = () => {
-    router.push('pages/login'); // Navigate to login page
+    router.push('/login'); // Navigate to login page
   };
 
   const navigateToRegister = () => {
@@ -47,6 +50,12 @@ const HomePage = () => {
         >
           Registrarse
         </button>
+      </div>
+          <GameList />
+          <TournamentList />
+
+      <div>
+
       </div>
     </div>
   );

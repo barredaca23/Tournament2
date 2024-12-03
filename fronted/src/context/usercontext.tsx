@@ -5,12 +5,15 @@ interface User {
   id: number;
   name: string;
   email: string;
+  token: string;
+  role: string;
 }
 
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
 }
+
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 

@@ -12,15 +12,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               Panel de Administración 
             </Link>
             <nav className="flex space-x-4">
-              <Link 
-                href="/admin/tournaments" 
+              <Link
+                href="/admin/tournaments"
                 className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
               >
                 <TrophyIcon className="w-5 h-5 mr-1" />
                 Torneos
               </Link>
-              <Link 
-                href="/admin/games" 
+              <Link
+                href="/admin/games"
                 className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200"
               >
                 <GamepadIcon className="w-5 h-5 mr-1" />

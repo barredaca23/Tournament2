@@ -5,7 +5,7 @@ import { useParams } from "next/navigation"; // Para acceder a los parámetros d
 import axios from "axios";
 
 interface UserProfile {
-  id: number;
+  id: string;
   name: string;
   email: string;
 }
@@ -25,7 +25,7 @@ const ProfilePage = () => {
       }
 
       try {
-        const response = await axios.get(`/api/profile/${userId}`);
+        const response = await axios.get(`http://localhost:5000/api/profile/${userId}`);
         setProfile(response.data);
         setFormData({ name: response.data.name, email: response.data.email });
       } catch (error) {
@@ -45,7 +45,7 @@ const ProfilePage = () => {
   // Llama a la API para actualizar el perfil
   const handleUpdateProfile = async () => {
     try {
-      const response = await axios.put(`/api/profile/${userId}`, formData);
+      const response = await axios.put(`http://localhost:5000/api/profile/${userId}`, formData);
       setProfile(response.data);
       setIsEditing(false);
     } catch (error) {

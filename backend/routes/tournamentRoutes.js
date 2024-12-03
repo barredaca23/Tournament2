@@ -1,24 +1,33 @@
 import express from 'express';
-import { getTournaments, getTournamentById, createTournament, updateTournament, deleteTournament, getTournamentCount } from '../controllers/tournamentController.js';
+import {
+  getTournaments,
+  getTournamentById,
+  createTournament,
+  updateTournament,
+  deleteTournament,
+  getTournamentCount,
+} from '../controllers/tournamentController.js';
+import { isAdmin } from './authMiddleware.js'; // Importa middlewares necesarios
 
 const router = express.Router();
 
-// Obtener todos los torneos (opcionalmente con filtros)
-router.get('/', getTournaments);
+// Obtener todos los torneos (Accesible para cualquier usuario autenticado)
+router.get('/',  getTournaments);// Con autenticación
 
-// Obtener el conteo de torneos
-router.get('/count', getTournamentCount);  // Esta es la ruta para el conteo de torneos
 
-// Crear un nuevo torneo
-router.post('/', createTournament);
+// Obtener el conteo de torneos (Accesible solo para administradores)
+router.get('/count',  getTournamentCount);
 
-// Actualizar un torneo existente
-router.put('/:id', updateTournament);
+// Crear un nuevo torneo (Accesible solo para administradores)
+router.post('/', isAdmin, createTournament);
 
-// Eliminar un torneo por ID
-router.delete('/:id', deleteTournament);
+// Actualizar un torneo existente (Accesible solo para administradores)
+router.put('/:id', isAdmin, updateTournament);
 
-// Obtener un torneo específico por ID
-router.get('/:id', getTournamentById);
+// Eliminar un torneo por ID (Accesible solo para administradores)
+router.delete('/:id', isAdmin, deleteTournament);
+
+// Obtener un torneo específico por ID (Accesible para cualquier usuario autenticado)
+router.get('/:id',  getTournamentById);
 
 export default router;

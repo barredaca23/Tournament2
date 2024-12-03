@@ -1,23 +1,36 @@
 // src/app/components/TournamentList.tsx
 'use client'
+// src/app/components/TournamentList.tsx
 import React, { useEffect, useState } from 'react';
-import axios from '../axiosInstance';
+
 import TournamentCard from './TournamentCard';
+import axiosInstance from '../axiosInstance';
 
 const TournamentList: React.FC = () => {
   const [tournaments, setTournaments] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchTournaments = async () => {
-      try {
-        const response = await axios.get('/tournaments');
+    const token = localStorage.getItem('token');
+    if (token) {
+      axiosInstance.get('/tournaments', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
         setTournaments(response.data);
-      } catch (error) {
-        console.error('Error fetching tournaments', error);
-      }
-    };
-
-    fetchTournaments();
+      })
+      .catch(error => {
+        if (error.response?.status === 401) {
+          // Redirigir al login si el token es inválido o ha expirado
+          window.location.href = '/login';
+        } else {
+          console.error('Error al obtener torneos:', error);
+        }
+      });
+    } else {
+      window.location.href = '/login'; // Redirigir al login si no hay token
+    }
   }, []);
 
   return (
@@ -33,3 +46,4 @@ const TournamentList: React.FC = () => {
 };
 
 export default TournamentList;
+
