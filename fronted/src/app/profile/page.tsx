@@ -67,16 +67,7 @@ export default function AdminPage() {
           <GameList />
           <TournamentListRegister />
         </div>
-          <button onClick={handleLogout} style={{
-            marginTop: "20px",
-            padding: "10px",
-            backgroundColor: "red",
-            color: "white",
-            border: "none",
-            borderRadius: "5px"
-          }}>
-            Cerrar Sesión
-          </button>
+
         </div>
 
   );

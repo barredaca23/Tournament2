@@ -19,6 +19,7 @@ const LoginPage = () => {
       localStorage.setItem('token', token); // Guarda el token en el almacenamiento local
       localStorage.setItem('userId', user.id); // Guarda el id del usuario en el almacenamiento local
       localStorage.setItem('role', user.role);
+      localStorage.setItem('username', user.username);
       console.log('Login exitoso');
       // Aquí puedes redirigir al usuario a la página de admin
       if (user.role === 'admin') {

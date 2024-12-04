@@ -118,7 +118,7 @@ export const deleteUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
     try {
       const userId = req.user.id; // Asegúrate de tener autenticación configurada para obtener el ID del usuario
-      const { rows } = await pool.query('SELECT id, name, email FROM users WHERE id = $1', [userId]);
+      const { rows } = await pool.query('SELECT id, username, email FROM users WHERE id = $1', [userId]);
       
       if (rows.length === 0) return res.status(404).json({ message: 'Usuario no encontrado' });
   
@@ -127,3 +127,86 @@ export const getUserProfile = async (req, res) => {
       res.status(500).json({ message: 'Error al obtener el perfil', error });
     }
   };
+
+  
+  
+// Controlador para obtener el torneo y los participantes de un usuario
+export const getTournamentsByUserId = async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      // Consulta para obtener los torneos y participantes
+      const query = `
+        SELECT 
+          t.id AS tournament_id, 
+          t.name AS tournament_name, 
+          t.start_date, 
+          t.end_date, 
+          t.max_players, 
+          t.game_name, 
+          t.cover_image_url,
+          u.id AS participant_id, 
+          u.username, 
+          u.email
+        FROM tournaments t
+        JOIN tournament_participants tp_user ON tp_user.tournament_id = t.id
+        JOIN tournament_participants tp_others ON tp_others.tournament_id = t.id
+        JOIN users u ON u.id = tp_others.user_id
+        WHERE tp_user.user_id = $1
+        ORDER BY t.start_date, u.username;
+      `;
+  
+      const result = await pool.query(query, [userId]);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'El usuario no está inscrito en ningún torneo.' });
+      }
+  
+      // Agrupar los resultados por torneo
+      const tournaments = {};
+      result.rows.forEach(row => {
+        const { 
+          tournament_id, 
+          tournament_name, 
+          start_date, 
+          end_date, 
+          max_players, 
+          game_name, 
+          cover_image_url, 
+          participant_id, 
+          username, 
+          email 
+        } = row;
+  
+        // Si el torneo aún no está registrado, lo inicializamos
+        if (!tournaments[tournament_id]) {
+          tournaments[tournament_id] = {
+            id: tournament_id,
+            name: tournament_name,
+            start_date,
+            end_date,
+            max_players,
+            game_name,
+            cover_image_url,
+            participants: []
+          };
+        }
+  
+        // Agregamos al participante al torneo correspondiente
+        tournaments[tournament_id].participants.push({
+          user_id: participant_id,
+          username,
+          email,
+        });
+      });
+  
+      // Transformar el objeto de torneos en un array
+      const tournamentsArray = Object.values(tournaments);
+  
+      res.json({ tournaments: tournamentsArray });
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+      res.status(500).json({ message: 'Hubo un error al procesar tu solicitud.' });
+    }
+  };
+  
